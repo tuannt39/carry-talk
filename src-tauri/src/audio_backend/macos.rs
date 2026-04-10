@@ -1,5 +1,6 @@
 use std::ffi::CStr;
 use std::os::raw::{c_char, c_void};
+use std::sync::mpsc;
 use std::time::Duration;
 
 use chrono::Utc;
@@ -95,61 +96,118 @@ impl SystemAudioBackend for MacosSystemBackend {
             ));
         }
 
-        let sender = Box::new(tx);
-        let sender_ptr = Box::into_raw(sender) as *mut c_void;
-        let handle = unsafe {
-            carrytalk_macos_sc_create_stream(selected.id, macos_audio_callback, sender_ptr)
-        };
-        if handle.is_null() {
-            unsafe {
-                drop(Box::from_raw(sender_ptr as *mut Sender<CapturedAudioFrame>));
-            }
-            return Err(AppError::AudioCapture(
-                "Failed to allocate macOS ScreenCaptureKit stream handle".into(),
-            ));
-        }
-
-        let started = unsafe { carrytalk_macos_sc_start_stream(handle) };
-        if !started {
-            let error = unsafe { last_error_message(handle) }
-                .unwrap_or_else(|| "Failed to start macOS ScreenCaptureKit stream".into());
-            unsafe {
-                carrytalk_macos_sc_destroy_stream(handle);
-                drop(Box::from_raw(sender_ptr as *mut Sender<CapturedAudioFrame>));
-            }
-            return Err(AppError::AudioCapture(error));
-        }
-
-        let sample_rate = unsafe { carrytalk_macos_sc_stream_sample_rate(handle) };
-        let channels = unsafe { carrytalk_macos_sc_stream_channels(handle) };
-
+        let (startup_tx, startup_rx) = mpsc::sync_channel(1);
         std::thread::spawn(move || {
-            while !cancel_token.is_cancelled() && unsafe { carrytalk_macos_sc_stream_running(handle) } {
-                std::thread::sleep(Duration::from_millis(20));
+            let mut startup_sent = false;
+            let thread_result = run_screen_capturekit_thread(selected, tx, cancel_token, &startup_tx, &mut startup_sent);
+            if let Err(err) = thread_result {
+                if !startup_sent {
+                    let _ = startup_tx.send(Err(err));
+                } else {
+                    tracing::error!(display = %encode_display_id(selected.id), "macOS ScreenCaptureKit thread exited: {err}");
+                }
             }
-
-            unsafe {
-                carrytalk_macos_sc_stop_stream(handle);
-                carrytalk_macos_sc_destroy_stream(handle);
-                drop(Box::from_raw(sender_ptr as *mut Sender<CapturedAudioFrame>));
-            }
-            tracing::debug!(display = %encode_display_id(selected.id), "macOS ScreenCaptureKit stream stopped.");
         });
 
-        Ok(SourceStreamFormat {
-            source: PhysicalAudioSource::SystemOutput,
-            sample_rate: if sample_rate == 0 {
-                SCREEN_CAPTUREKIT_OUTPUT_SAMPLE_RATE
-            } else {
-                sample_rate
-            },
-            channels: if channels == 0 {
-                SCREEN_CAPTUREKIT_OUTPUT_CHANNELS
-            } else {
-                channels
-            },
-        })
+        startup_rx.recv().map_err(|_| {
+            AppError::AudioCapture("macOS ScreenCaptureKit thread exited before startup completed".into())
+        })?
     }
+}
+
+fn run_screen_capturekit_thread(
+    selected: DisplayInfo,
+    tx: Sender<CapturedAudioFrame>,
+    cancel_token: CancellationToken,
+    startup_tx: &mpsc::SyncSender<AppResult<SourceStreamFormat>>,
+    startup_sent: &mut bool,
+) -> AppResult<()> {
+    struct ScreenCaptureKitCleanup {
+        handle: *mut MacosScStreamHandle,
+        sender_ptr: *mut c_void,
+        started: bool,
+    }
+
+    impl Drop for ScreenCaptureKitCleanup {
+        fn drop(&mut self) {
+            unsafe {
+                if !self.handle.is_null() {
+                    if self.started {
+                        carrytalk_macos_sc_stop_stream(self.handle);
+                    }
+                    carrytalk_macos_sc_destroy_stream(self.handle);
+                }
+                if !self.sender_ptr.is_null() {
+                    drop(Box::from_raw(self.sender_ptr as *mut Sender<CapturedAudioFrame>));
+                }
+            }
+        }
+    }
+
+    let sender = Box::new(tx);
+    let sender_ptr = Box::into_raw(sender) as *mut c_void;
+    let handle = unsafe {
+        carrytalk_macos_sc_create_stream(selected.id, macos_audio_callback, sender_ptr)
+    };
+    if handle.is_null() {
+        unsafe {
+            drop(Box::from_raw(sender_ptr as *mut Sender<CapturedAudioFrame>));
+        }
+        return Err(AppError::AudioCapture(
+            "Failed to allocate macOS ScreenCaptureKit stream handle".into(),
+        ));
+    }
+
+    let mut cleanup = ScreenCaptureKitCleanup {
+        handle,
+        sender_ptr,
+        started: false,
+    };
+
+    let started = unsafe { carrytalk_macos_sc_start_stream(handle) };
+    if !started {
+        let error = unsafe { last_error_message(handle) }
+            .unwrap_or_else(|| "Failed to start macOS ScreenCaptureKit stream".into());
+        return Err(AppError::AudioCapture(error));
+    }
+    cleanup.started = true;
+
+    let sample_rate = unsafe { carrytalk_macos_sc_stream_sample_rate(handle) };
+    let channels = unsafe { carrytalk_macos_sc_stream_channels(handle) };
+    let stream_format = SourceStreamFormat {
+        source: PhysicalAudioSource::SystemOutput,
+        sample_rate: if sample_rate == 0 {
+            SCREEN_CAPTUREKIT_OUTPUT_SAMPLE_RATE
+        } else {
+            sample_rate
+        },
+        channels: if channels == 0 {
+            SCREEN_CAPTUREKIT_OUTPUT_CHANNELS
+        } else {
+            channels
+        },
+    };
+
+    startup_tx
+        .send(Ok(stream_format.clone()))
+        .map_err(|_| AppError::AudioCapture("macOS ScreenCaptureKit startup receiver closed".into()))?;
+    *startup_sent = true;
+
+    tracing::info!(
+        display = %encode_display_id(selected.id),
+        sample_rate = stream_format.sample_rate,
+        channels = stream_format.channels,
+        "macOS ScreenCaptureKit stream started."
+    );
+
+    while !cancel_token.is_cancelled() && unsafe { carrytalk_macos_sc_stream_running(handle) } {
+        std::thread::sleep(Duration::from_millis(20));
+    }
+
+    drop(cleanup);
+    tracing::debug!(display = %encode_display_id(selected.id), "macOS ScreenCaptureKit stream stopped.");
+
+    Ok(())
 }
 
 fn active_displays() -> AppResult<Vec<DisplayInfo>> {
@@ -292,11 +350,11 @@ extern "C" fn macos_audio_callback(
 }
 
 unsafe fn last_error_message(handle: *const MacosScStreamHandle) -> Option<String> {
-    let raw = carrytalk_macos_sc_last_error(handle);
+    let raw = unsafe { carrytalk_macos_sc_last_error(handle) };
     if raw.is_null() {
         return None;
     }
-    Some(CStr::from_ptr(raw).to_string_lossy().into_owned())
+    Some(unsafe { CStr::from_ptr(raw) }.to_string_lossy().into_owned())
 }
 
 fn display_label_from_info(display: DisplayInfo) -> String {
