@@ -1,0 +1,43 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nicegui-toolkit/schema-tauri/main/tauri-2.0.0.json",
+  "productName": "CarryTalk",
+  "version": "0.1.0",
+  "identifier": "com.carrytalk",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "title": "CarryTalk",
+        "width": 520,
+        "height": 720,
+        "minWidth": 400,
+        "minHeight": 500,
+        "resizable": true,
+        "maximizable": false,
+        "center": true,
+        "decorations": false,
+        "transparent": false,
+        "alwaysOnTop": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ]
+  }
+}

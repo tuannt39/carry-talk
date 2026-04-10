@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+src-tauri/target/
+src-tauri/gen/
+.worktrees/
+
+# Portable data (runtime)
+carrytalk-data/config.toml
+carrytalk-data/sessions/*.jsonl
+
+# Environment
+.env*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/*
+.idea/*
+
+# Agent / AI tooling
+.codex/*
+.claude/*
+.gemini/*
+.agent
+.agents/*
+.antigravity
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+
+# Logs
+*.log
+
+# Others
+carrytalk-data/
+tasks/
+docs/

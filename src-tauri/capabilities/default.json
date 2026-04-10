@@ -1,0 +1,12 @@
+{
+  "identifier": "default",
+  "description": "Default permissions for CarryTalk",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:window:allow-start-dragging",
+    "core:window:allow-minimize",
+    "core:window:allow-close",
+    "shell:allow-open"
+  ]
+}
