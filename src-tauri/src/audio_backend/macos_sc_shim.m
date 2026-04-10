@@ -35,7 +35,8 @@ static void carrytalk_set_error(carrytalk_macos_sc_stream_handle *handle, NSStri
     if (handle == NULL) {
         return;
     }
-    const char *utf8 = [[message ?: @"Unknown macOS ScreenCaptureKit error"] UTF8String];
+    NSString *resolved_message = message != nil ? message : @"Unknown macOS ScreenCaptureKit error";
+    const char *utf8 = [resolved_message UTF8String];
     if (utf8 == NULL) {
         utf8 = "Unknown macOS ScreenCaptureKit error";
     }
@@ -158,11 +159,6 @@ bool carrytalk_macos_sc_start_stream(carrytalk_macos_sc_stream_handle *handle) {
         return false;
     }
 
-    if (!@available(macOS 13.0, *)) {
-        carrytalk_set_error(handle, @"ScreenCaptureKit system audio capture requires macOS 13 or newer");
-        return false;
-    }
-
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     __block BOOL started = NO;
     __block NSString *startup_error = nil;
@@ -190,9 +186,6 @@ bool carrytalk_macos_sc_start_stream(carrytalk_macos_sc_stream_handle *handle) {
         if ([handle->configuration respondsToSelector:@selector(setWidth:)]) {
             handle->configuration.width = 2;
             handle->configuration.height = 2;
-        }
-        if ([handle->configuration respondsToSelector:@selector(setCapturesVideo:)]) {
-            handle->configuration.capturesVideo = NO;
         }
 
         handle->stream = [[SCStream alloc] initWithFilter:handle->filter configuration:handle->configuration delegate:nil];
@@ -235,9 +228,6 @@ void carrytalk_macos_sc_stop_stream(carrytalk_macos_sc_stream_handle *handle) {
     }
 
     atomic_store(&handle->running, false);
-    if (!@available(macOS 13.0, *)) {
-        return;
-    }
     if (handle->stream == nil) {
         return;
     }
