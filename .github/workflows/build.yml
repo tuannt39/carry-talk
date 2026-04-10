@@ -10,6 +10,9 @@ on:
 permissions:
   contents: read
 
+env:
+  MACOS_MIN_VERSION: '13.0'
+
 defaults:
   run:
     shell: bash
@@ -94,7 +97,14 @@ jobs:
             fakeroot \
             rpm
 
+      - name: Build Tauri app (macOS)
+        if: matrix.platform == 'macos'
+        env:
+          MACOSX_DEPLOYMENT_TARGET: ${{ env.MACOS_MIN_VERSION }}
+        run: npm run tauri -- build --target ${{ matrix.target }}
+
       - name: Build Tauri app
+        if: matrix.platform != 'macos'
         run: npm run tauri -- build --target ${{ matrix.target }}
 
       - name: Upload artifact

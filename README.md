@@ -148,6 +148,15 @@ At a high level, CarryTalk follows this flow:
 3. Transcript and session events are emitted back to the frontend through Tauri events.
 4. The UI renders incoming transcript segments and keeps the visible session state in sync.
 
+## Acknowledgements
+
+This project was adapted and inspired by the following projects:
+
+- [My Translator](https://github.com/phuc-nt/my-translator)
+- [Node Trans](https://github.com/thainph/node-trans)
+- [LiveCaptions Translator](https://github.com/SakiRinn/LiveCaptions-Translator)
+- [Real-Time Translator](https://github.com/Vanyoo/realtime-subtitle)
+
 ## Contributing
 
 Contributions are welcome.
