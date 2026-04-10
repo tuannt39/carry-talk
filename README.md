@@ -15,8 +15,8 @@ CarryTalk is designed around a live transcription workflow:
 The current codebase includes a Soniox-based provider flow, desktop settings management, localized UI resources, and a native session pipeline built with Tauri and Rust.
 
 <p align="center">
-  <img src="images/01.png" alt="CarryTalk" height="650" />
-  <img src="images/02.png" alt="CarryTalk" height="650" />
+  <img src="images/01.png" alt="CarryTalk" height="520" />
+  <img src="images/02.png" alt="CarryTalk" height="520" />
 </p>
 
 ## Features
