@@ -40,7 +40,7 @@ jobs:
           fi
 
   build_and_upload:
-    name: Build and upload (${{ matrix.artifact_name }})
+    name: Build and upload (${{ matrix.platform }}-${{ matrix.arch }})
     needs: create_release
     runs-on: ${{ matrix.os }}
     strategy:
@@ -51,32 +51,32 @@ jobs:
             platform: linux
             arch: amd64
             target: x86_64-unknown-linux-gnu
-            artifact_name: carry-talk-linux-amd64
+            artifact_name: linux-amd64
           - os: ubuntu-24.04-arm
             platform: linux
             arch: arm64
             target: aarch64-unknown-linux-gnu
-            artifact_name: carry-talk-linux-arm64
+            artifact_name: linux-arm64
           - os: windows-latest
             platform: windows
             arch: amd64
             target: x86_64-pc-windows-msvc
-            artifact_name: carry-talk-windows-amd64
+            artifact_name: windows-amd64
           - os: windows-11-arm
             platform: windows
             arch: arm64
             target: aarch64-pc-windows-msvc
-            artifact_name: carry-talk-windows-arm64
+            artifact_name: windows-arm64
           - os: macos-15-intel
             platform: macos
             arch: intel
             target: x86_64-apple-darwin
-            artifact_name: carry-talk-macos-intel
+            artifact_name: macos-intel
           - os: macos-15
             platform: macos
             arch: silicon
             target: aarch64-apple-darwin
-            artifact_name: carry-talk-macos-silicon
+            artifact_name: macos-silicon
 
     steps:
       - name: Check out source
@@ -125,9 +125,13 @@ jobs:
           MACOSX_DEPLOYMENT_TARGET: ${{ env.MACOS_MIN_VERSION }}
         run: npm run tauri -- build --target ${{ matrix.target }}
 
-      - name: Build Tauri app
-        if: matrix.platform != 'macos'
+      - name: Build Tauri app (Linux)
+        if: matrix.platform == 'linux'
         run: npm run tauri -- build --target ${{ matrix.target }}
+
+      - name: Build Tauri app (Windows portable)
+        if: matrix.platform == 'windows'
+        run: npm run tauri -- build --target ${{ matrix.target }} --no-bundle
 
       - name: Upload assets to GitHub Release
         env:
@@ -135,6 +139,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           shopt -s nullglob
+          VERSION="${TAG_NAME#v}"
           asset_dir="$(mktemp -d)"
           files=()
 
@@ -154,16 +159,15 @@ jobs:
 
           case "${{ matrix.platform }}" in
             linux)
-              copy_asset "src-tauri/target/${{ matrix.target }}/release/bundle/appimage/*.AppImage" "${{ matrix.artifact_name }}.AppImage"
-              copy_asset "src-tauri/target/${{ matrix.target }}/release/bundle/deb/*.deb" "${{ matrix.artifact_name }}.deb"
-              copy_asset "src-tauri/target/${{ matrix.target }}/release/bundle/rpm/*.rpm" "${{ matrix.artifact_name }}.rpm"
+              copy_asset "src-tauri/target/${{ matrix.target }}/release/bundle/appimage/*.AppImage" "carry-talk-${VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.AppImage"
+              copy_asset "src-tauri/target/${{ matrix.target }}/release/bundle/deb/*.deb" "carry-talk-${VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.deb"
+              copy_asset "src-tauri/target/${{ matrix.target }}/release/bundle/rpm/*.rpm" "carry-talk-${VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.rpm"
               ;;
             windows)
-              copy_asset "src-tauri/target/${{ matrix.target }}/release/bundle/msi/*.msi" "${{ matrix.artifact_name }}.msi"
-              copy_asset "src-tauri/target/${{ matrix.target }}/release/bundle/nsis/*.exe" "${{ matrix.artifact_name }}-nsis.exe"
+              copy_asset "src-tauri/target/${{ matrix.target }}/release/carry-talk.exe" "carry-talk-${VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.exe"
               ;;
             macos)
-              copy_asset "src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg" "${{ matrix.artifact_name }}.dmg"
+              copy_asset "src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg" "carry-talk-${VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.dmg"
               ;;
             *)
               echo "Unsupported platform: ${{ matrix.platform }}"
