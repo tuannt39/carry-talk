@@ -156,6 +156,9 @@ This project was adapted and inspired by the following projects:
 - [Node Trans](https://github.com/thainph/node-trans)
 - [LiveCaptions Translator](https://github.com/SakiRinn/LiveCaptions-Translator)
 - [Real-Time Translator](https://github.com/Vanyoo/realtime-subtitle)
+- [Realtime Subtitle](https://github.com/febilly/realtime-subtitle)
+- [DeLive](https://github.com/XimilalaXiang/DeLive)
+- [Taurscribe](https://github.com/machowdh/taurscribe)
 
 ## Contributing
 
