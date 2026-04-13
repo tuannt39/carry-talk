@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CarryTalk — Portable real-time transcription and translation</title>
+    <meta
+      name="description"
+      content="CarryTalk is a portable desktop app for real-time transcription and translation, with flexible audio capture, timestamped transcripts, and local session recovery."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./main.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content" data-i18n="a11y.skipLink">Skip to content</a>
+
+    <header class="site-header">
+      <div class="container nav-shell">
+        <a class="brand" href="#top" aria-label="CarryTalk home" data-i18n-aria-label="a11y.brandHome">
+          <img src="./assets/logo.png" alt="CarryTalk logo" class="brand-logo" data-i18n-alt="a11y.logoAlt" />
+          <span class="brand-text">CarryTalk</span>
+        </a>
+
+        <nav class="site-nav" aria-label="Primary navigation" data-i18n-aria-label="a11y.primaryNav">
+          <a href="#features" data-i18n="nav.features">Features</a>
+          <a href="#use-cases" data-i18n="nav.useCases">Use cases</a>
+          <a href="#how-it-works" data-i18n="nav.howItWorks">How it works</a>
+          <a href="#faq" data-i18n="nav.faq">FAQ</a>
+          <a href="#github" data-i18n="nav.github">GitHub</a>
+        </nav>
+
+        <div class="nav-actions">
+          <div class="lang-toggle" role="group" aria-label="Language switcher" data-i18n-aria-label="a11y.languageSwitcher">
+            <button type="button" class="lang-button is-active" data-lang="en" aria-pressed="true">
+              EN
+            </button>
+            <button type="button" class="lang-button" data-lang="vi" aria-pressed="false">
+              VI
+            </button>
+          </div>
+          <a class="button button-secondary" href="https://github.com/tuannt39/carry-talk" target="_blank" rel="noreferrer" data-i18n="nav.repoCta">View repo</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="hero section" id="top">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow" data-i18n="hero.eyebrow">Portable desktop app for live language workflows</p>
+            <h1 data-i18n="hero.title">Real-time transcription and translation, built for desktop.</h1>
+            <p class="hero-lead" data-i18n="hero.lead">
+              CarryTalk helps you capture speech from your microphone, system audio, or both, then follow live transcription and translation in one focused desktop interface.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="https://github.com/tuannt39/carry-talk/releases" target="_blank" rel="noreferrer" data-i18n="hero.primaryCta">Download from Releases</a>
+              <a class="button button-secondary" href="https://github.com/tuannt39/carry-talk" target="_blank" rel="noreferrer" data-i18n="hero.secondaryCta">Build from source</a>
+            </div>
+            <ul class="hero-points" aria-label="Key product highlights" data-i18n-aria-label="a11y.heroHighlights">
+              <li data-i18n="hero.point1">Real-time transcript and translation updates</li>
+              <li data-i18n="hero.point2">Timestamped session history stored locally</li>
+              <li data-i18n="hero.point3">English and Vietnamese interface support</li>
+            </ul>
+          </div>
+
+          <div class="hero-visual card-panel">
+            <figure class="shot shot-main">
+              <img src="./assets/screenshots/01.png" alt="CarryTalk desktop interface showing a live transcript session" data-i18n-alt="a11y.screenshot1Alt" />
+            </figure>
+            <figure class="shot shot-secondary">
+              <img src="./assets/screenshots/02.png" alt="CarryTalk settings and controls for audio and translation configuration" data-i18n-alt="a11y.screenshot2Alt" />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="problem-solution-title">
+        <div class="container narrow-flow">
+          <p class="eyebrow" data-i18n="problem.eyebrow">Problem → Solution</p>
+          <h2 id="problem-solution-title" data-i18n="problem.title">From scattered live audio to a portable workflow you can reopen.</h2>
+          <div class="problem-solution-grid">
+            <article class="card-panel">
+              <h3 data-i18n="problem.problemTitle">The problem</h3>
+              <p data-i18n="problem.problemBody">
+                Live conversations, calls, and videos move quickly. It is easy to miss context, lose translated meaning, or rely on tools that do not keep a usable local record.
+              </p>
+            </article>
+            <article class="card-panel accent-panel">
+              <h3 data-i18n="problem.solutionTitle">The CarryTalk approach</h3>
+              <p data-i18n="problem.solutionBody">
+                CarryTalk combines real-time transcription, translation, flexible audio capture, and local session persistence so you can follow what is happening now and recover the session later when needed.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="features" aria-labelledby="features-title">
+        <div class="container">
+          <p class="eyebrow" data-i18n="features.eyebrow">Features</p>
+          <h2 id="features-title" data-i18n="features.title">Six practical capabilities confirmed in the product.</h2>
+          <div class="feature-grid">
+            <article class="feature-card card-panel">
+              <h3 data-i18n="features.card1.title">Real-time transcript updates</h3>
+              <p data-i18n="features.card1.body">Follow incoming speech as transcript segments update live during an active session.</p>
+            </article>
+            <article class="feature-card card-panel">
+              <h3 data-i18n="features.card2.title">Live translation view</h3>
+              <p data-i18n="features.card2.body">Enable translation and track translated text alongside the original transcript flow.</p>
+            </article>
+            <article class="feature-card card-panel">
+              <h3 data-i18n="features.card3.title">Session control states</h3>
+              <p data-i18n="features.card3.body">Start, pause, resume, and stop sessions without leaving the main recording workflow.</p>
+            </article>
+            <article class="feature-card card-panel">
+              <h3 data-i18n="features.card4.title">Flexible audio capture</h3>
+              <p data-i18n="features.card4.body">Capture from microphone, system audio, or mixed input depending on your setup.</p>
+            </article>
+            <article class="feature-card card-panel">
+              <h3 data-i18n="features.card5.title">Timestamped transcript records</h3>
+              <p data-i18n="features.card5.body">Transcript segments include timing data so sessions remain easier to review and trace.</p>
+            </article>
+            <article class="feature-card card-panel">
+              <h3 data-i18n="features.card6.title">Local persistence and recovery</h3>
+              <p data-i18n="features.card6.body">Session data is stored locally and interrupted sessions can be recovered on the next app startup.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="use-cases" aria-labelledby="use-cases-title">
+        <div class="container">
+          <p class="eyebrow" data-i18n="useCases.eyebrow">Use cases</p>
+          <h2 id="use-cases-title" data-i18n="useCases.title">Built for everyday listening and translation scenarios.</h2>
+          <div class="use-case-grid">
+            <article class="card-panel">
+              <h3 data-i18n="useCases.case1.title">Meetings and interviews</h3>
+              <p data-i18n="useCases.case1.body">Keep up with spoken details and revisit a locally saved transcript after the session.</p>
+            </article>
+            <article class="card-panel">
+              <h3 data-i18n="useCases.case2.title">Online calls and streams</h3>
+              <p data-i18n="useCases.case2.body">Use system or mixed capture when audio comes from your computer output.</p>
+            </article>
+            <article class="card-panel">
+              <h3 data-i18n="useCases.case3.title">Bilingual note-taking</h3>
+              <p data-i18n="useCases.case3.body">Watch original and translated text together while the conversation is still happening.</p>
+            </article>
+            <article class="card-panel">
+              <h3 data-i18n="useCases.case4.title">Personal review workflows</h3>
+              <p data-i18n="useCases.case4.body">Return to timestamped transcript records without depending on a browser tab staying open.</p>
+            </article>
+            <article class="card-panel">
+              <h3 data-i18n="useCases.case5.title">Portable desktop setups</h3>
+              <p data-i18n="useCases.case5.body">Run a desktop-first workflow that keeps app settings and session data on the local machine.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="how-it-works" aria-labelledby="how-it-works-title">
+        <div class="container">
+          <p class="eyebrow" data-i18n="how.eyebrow">How it works</p>
+          <h2 id="how-it-works-title" data-i18n="how.title">Four steps from input to saved session.</h2>
+          <ol class="steps-grid">
+            <li class="step-card card-panel">
+              <span class="step-index">01</span>
+              <h3 data-i18n="how.step1.title">Choose your capture mode</h3>
+              <p data-i18n="how.step1.body">Select microphone, system audio, or mixed capture, then pick the available devices.</p>
+            </li>
+            <li class="step-card card-panel">
+              <span class="step-index">02</span>
+              <h3 data-i18n="how.step2.title">Start a live session</h3>
+              <p data-i18n="how.step2.body">Begin recording and watch the app move through its active session states.</p>
+            </li>
+            <li class="step-card card-panel">
+              <span class="step-index">03</span>
+              <h3 data-i18n="how.step3.title">Follow transcript and translation</h3>
+              <p data-i18n="how.step3.body">Read live transcript updates with translated text when translation is enabled.</p>
+            </li>
+            <li class="step-card card-panel">
+              <span class="step-index">04</span>
+              <h3 data-i18n="how.step4.title">Pause, resume, stop, and reopen later</h3>
+              <p data-i18n="how.step4.body">Keep control over the session lifecycle and rely on local persistence and recovery support.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="why-title">
+        <div class="container split-section">
+          <div>
+            <p class="eyebrow" data-i18n="why.eyebrow">Why CarryTalk</p>
+            <h2 id="why-title" data-i18n="why.title">Focused on practical desktop transcription instead of noisy promises.</h2>
+          </div>
+          <div class="why-list">
+            <article class="why-item">
+              <h3 data-i18n="why.item1.title">Portable by design</h3>
+              <p data-i18n="why.item1.body">The app is built as a desktop application and stores runtime data locally.</p>
+            </article>
+            <article class="why-item">
+              <h3 data-i18n="why.item2.title">Live workflow first</h3>
+              <p data-i18n="why.item2.body">It is designed around real-time listening, session state handling, and active transcript updates.</p>
+            </article>
+            <article class="why-item">
+              <h3 data-i18n="why.item3.title">Recovery-aware</h3>
+              <p data-i18n="why.item3.body">Interrupted sessions are not treated as disposable, which makes the workflow more resilient.</p>
+            </article>
+            <article class="why-item">
+              <h3 data-i18n="why.item4.title">Simple language access</h3>
+              <p data-i18n="why.item4.body">The interface already supports English and Vietnamese, matching the product’s current language setup.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="github" aria-labelledby="github-title">
+        <div class="container card-panel open-source-panel">
+          <p class="eyebrow" data-i18n="oss.eyebrow">Open-source / GitHub</p>
+          <h2 id="github-title" data-i18n="oss.title">Explore the code, download releases, or build it yourself.</h2>
+          <p class="section-lead" data-i18n="oss.body">
+            CarryTalk is available on GitHub. The safest calls to action today are browsing the repository, downloading published releases, or building from source in your own environment.
+          </p>
+          <div class="cta-row">
+            <a class="button button-primary" href="https://github.com/tuannt39/carry-talk" target="_blank" rel="noreferrer" data-i18n="oss.cta1">Open GitHub repository</a>
+            <a class="button button-secondary" href="https://github.com/tuannt39/carry-talk/releases" target="_blank" rel="noreferrer" data-i18n="oss.cta2">Browse GitHub Releases</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="faq" aria-labelledby="faq-title">
+        <div class="container narrow-flow">
+          <p class="eyebrow" data-i18n="faq.eyebrow">FAQ</p>
+          <h2 id="faq-title" data-i18n="faq.title">Common questions, answered carefully.</h2>
+          <div class="faq-list">
+            <details class="faq-item card-panel">
+              <summary data-i18n="faq.q1.q">What is CarryTalk?</summary>
+              <p data-i18n="faq.q1.a">CarryTalk is a Tauri desktop app for portable real-time transcription and translation.</p>
+            </details>
+            <details class="faq-item card-panel">
+              <summary data-i18n="faq.q2.q">Can it capture more than microphone input?</summary>
+              <p data-i18n="faq.q2.a">Yes. The app includes microphone, system audio, and mixed capture modes, depending on runtime support in the environment.</p>
+            </details>
+            <details class="faq-item card-panel">
+              <summary data-i18n="faq.q3.q">Does it support session controls?</summary>
+              <p data-i18n="faq.q3.a">Yes. The current app flow includes start, pause, resume, and stop controls for sessions.</p>
+            </details>
+            <details class="faq-item card-panel">
+              <summary data-i18n="faq.q4.q">Are transcripts saved locally?</summary>
+              <p data-i18n="faq.q4.a">Yes. Session data is persisted locally, and the app includes startup recovery for interrupted sessions.</p>
+            </details>
+            <details class="faq-item card-panel">
+              <summary data-i18n="faq.q5.q">Does the interface support multiple languages?</summary>
+              <p data-i18n="faq.q5.a">Yes. The application already includes English and Vietnamese UI support.</p>
+            </details>
+            <details class="faq-item card-panel">
+              <summary data-i18n="faq.q6.q">How should I try it today?</summary>
+              <p data-i18n="faq.q6.a">Use the GitHub repository, GitHub Releases, or build from source. Those are the safest public entry points confirmed for the project right now.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="section final-cta" aria-labelledby="final-cta-title">
+        <div class="container card-panel final-cta-panel">
+          <p class="eyebrow" data-i18n="final.eyebrow">Get started</p>
+          <h2 id="final-cta-title" data-i18n="final.title">Start with the repo. Download a release when available. Build when you need control.</h2>
+          <p class="section-lead" data-i18n="final.body">CarryTalk is best explored as an open desktop project: inspect the code, review the release page, and run it locally when it fits your workflow.</p>
+          <div class="cta-row">
+            <a class="button button-primary" href="https://github.com/tuannt39/carry-talk" target="_blank" rel="noreferrer" data-i18n="final.cta1">Visit GitHub</a>
+            <a class="button button-secondary" href="https://github.com/tuannt39/carry-talk/releases" target="_blank" rel="noreferrer" data-i18n="final.cta2">Open Releases</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-shell">
+        <p data-i18n="footer.copy">CarryTalk is a portable desktop app for real-time transcription and translation.</p>
+        <p><span data-i18n="footer.rights">Copyright</span> <span id="current-year">2026</span> CarryTalk.</p>
+      </div>
+    </footer>
+  </body>
+</html>

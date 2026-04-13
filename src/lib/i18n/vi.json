@@ -1,0 +1,109 @@
+{
+  "app_name": "CarryTalk",
+  "session": {
+    "idle": "Sẵn sàng",
+    "connecting": "Đang kết nối…",
+    "buffering": "Đang chờ giọng nói…",
+    "recording": "Đang chuyển giọng nói thành văn bản",
+    "paused": "Đang tạm dừng",
+    "reconnecting": "Đang kết nối lại…",
+    "draining": "Đang hoàn tất phiên…",
+    "error": "Lỗi"
+  },
+  "controls": {
+    "start": "Bắt đầu",
+    "pause": "Tạm dừng",
+    "continue": "Tiếp tục",
+    "stop": "Dừng",
+    "settings": "Cài đặt",
+    "minimize": "Thu nhỏ",
+    "close_window": "Đóng cửa sổ",
+    "segments": "đoạn"
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "general": "Chung",
+    "provider": "Nhà cung cấp",
+    "provider_name": "Nhà cung cấp",
+    "ui_language": "Ngôn ngữ giao diện",
+    "theme": "Giao diện",
+    "dark": "Tối",
+    "light": "Sáng",
+    "api_key": "API key",
+    "api_key_placeholder": "Nhập API key",
+    "saved_success": "Đã lưu cấu hình thành công.",
+    "save": "Lưu",
+    "close": "Đóng",
+    "source_language": "Ngôn ngữ nguồn",
+    "target_language": "Ngôn ngữ đích",
+    "auto_detect": "Tự động nhận diện",
+    "audio": {
+      "title": "Âm thanh",
+      "capture_mode": "Chế độ thu",
+      "microphone": "Microphone",
+      "system_audio": "Âm thanh hệ thống",
+      "mixed_mode": "Chế độ trộn",
+      "available": "Khả dụng",
+      "unavailable": "Không khả dụng",
+      "microphone_device": "Thiết bị microphone",
+      "system_audio_device": "Thiết bị âm thanh hệ thống",
+      "default_device": "Thiết bị mặc định",
+      "default_suffix": "(Mặc định)",
+      "show_advanced": "Hiện cài đặt âm thanh nâng cao",
+      "hide_advanced": "Ẩn cài đặt âm thanh nâng cao",
+      "mic_gain": "Khuếch đại microphone",
+      "system_gain": "Khuếch đại âm thanh hệ thống",
+      "mic_silence_threshold": "Ngưỡng im lặng microphone",
+      "system_silence_threshold": "Ngưỡng im lặng âm thanh hệ thống",
+      "capture_mode_options": {
+        "microphone": "Microphone",
+        "system_audio": "Âm thanh hệ thống",
+        "mixed": "Microphone + Hệ thống"
+      },
+      "reasons": {
+        "audio": {
+          "generic_unavailable": "Nguồn âm thanh này hiện không khả dụng trên môi trường chạy này.",
+          "microphone": {
+            "no_usable_device": "Không tìm thấy thiết bị microphone đầu vào khả dụng."
+          },
+          "system": {
+            "no_monitor_source": "Không tìm thấy nguồn monitor khả dụng để thu âm thanh hệ thống.",
+            "no_display_available": "Thu âm thanh hệ thống cần có ít nhất một màn hình đang hoạt động.",
+            "runtime_verification_pending": "Thu âm thanh hệ thống đã có nhưng vẫn đang chờ xác minh runtime.",
+            "runtime_not_wired": "Thu âm thanh hệ thống chưa được nối cho nền tảng này.",
+            "enumeration_failed": "Không thể liệt kê thiết bị âm thanh hệ thống.",
+            "runtime_error": "Âm thanh hệ thống hiện không khả dụng do lỗi runtime."
+          },
+          "mixed": {
+            "requires_microphone": "Chế độ trộn cần một thiết bị microphone đầu vào khả dụng.",
+            "requires_system_audio": "Chế độ trộn cần khả năng thu âm thanh hệ thống khả dụng.",
+            "runtime_verification_pending": "Chế độ trộn đã có nhưng vẫn đang chờ xác minh runtime.",
+            "runtime_not_wired": "Chế độ trộn chưa được nối cho nền tảng này."
+          }
+        }
+      }
+    }
+  },
+  "transcript": {
+    "empty": "Nhấn Bắt đầu để chuyển giọng nói thành văn bản.",
+    "waiting_for_speech": "Đang chờ giọng nói…",
+    "original": "Bản gốc",
+    "translated": "Bản dịch"
+  },
+  "startup": {
+    "loading": "Đang tải…",
+    "loading_settings": "Đang tải cài đặt…",
+    "loading_session": "Đang tải phiên…",
+    "preparing_app": "Đang chuẩn bị ứng dụng…"
+  },
+  "shutdown": {
+    "title": "Đang tắt ứng dụng…",
+    "closing_app": "Đang đóng ứng dụng…",
+    "finishing_session": "Đang hoàn tất phiên hiện tại…"
+  },
+  "toast": {
+    "session_error": "Lỗi phiên",
+    "session_warning": "Cảnh báo phiên",
+    "session_recovered": "Đã khôi phục phiên bị gián đoạn."
+  }
+}

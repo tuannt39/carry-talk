@@ -1,0 +1,109 @@
+{
+  "app_name": "CarryTalk",
+  "session": {
+    "idle": "Ready",
+    "connecting": "Connecting…",
+    "buffering": "Waiting for speech…",
+    "recording": "Transcribing speech",
+    "paused": "Paused",
+    "reconnecting": "Reconnecting…",
+    "draining": "Finishing session…",
+    "error": "Error"
+  },
+  "controls": {
+    "start": "Start",
+    "pause": "Pause",
+    "continue": "Continue",
+    "stop": "Stop",
+    "settings": "Settings",
+    "minimize": "Minimize",
+    "close_window": "Close window",
+    "segments": "segments"
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "provider": "Provider",
+    "provider_name": "Provider",
+    "ui_language": "UI Language",
+    "theme": "Theme",
+    "dark": "Dark",
+    "light": "Light",
+    "api_key": "API Key",
+    "api_key_placeholder": "Enter API key",
+    "saved_success": "Settings saved successfully.",
+    "save": "Save",
+    "close": "Close",
+    "source_language": "Source Language",
+    "target_language": "Target Language",
+    "auto_detect": "Auto-detect",
+    "audio": {
+      "title": "Audio",
+      "capture_mode": "Capture mode",
+      "microphone": "Microphone",
+      "system_audio": "System audio",
+      "mixed_mode": "Mixed mode",
+      "available": "Available",
+      "unavailable": "Unavailable",
+      "microphone_device": "Microphone device",
+      "system_audio_device": "System audio device",
+      "default_device": "Default device",
+      "default_suffix": "(Default)",
+      "show_advanced": "Show advanced audio",
+      "hide_advanced": "Hide advanced audio",
+      "mic_gain": "Mic gain",
+      "system_gain": "System gain",
+      "mic_silence_threshold": "Mic silence threshold",
+      "system_silence_threshold": "System silence threshold",
+      "capture_mode_options": {
+        "microphone": "Microphone",
+        "system_audio": "System Audio",
+        "mixed": "Microphone + System"
+      },
+      "reasons": {
+        "audio": {
+          "generic_unavailable": "Audio source is unavailable on this runtime.",
+          "microphone": {
+            "no_usable_device": "No usable microphone input device was found."
+          },
+          "system": {
+            "no_monitor_source": "No usable system-audio monitor source was found.",
+            "no_display_available": "System audio capture needs an active display.",
+            "runtime_verification_pending": "System audio capture is present but still pending runtime verification.",
+            "runtime_not_wired": "System audio capture is not wired on this platform yet.",
+            "enumeration_failed": "Could not enumerate system audio devices.",
+            "runtime_error": "System audio is unavailable due to a runtime error."
+          },
+          "mixed": {
+            "requires_microphone": "Mixed mode requires a usable microphone input device.",
+            "requires_system_audio": "Mixed mode requires usable system audio capture.",
+            "runtime_verification_pending": "Mixed mode is present but still pending runtime verification.",
+            "runtime_not_wired": "Mixed mode is not wired on this platform yet."
+          }
+        }
+      }
+    }
+  },
+  "transcript": {
+    "empty": "Press Start to begin transcribing speech.",
+    "waiting_for_speech": "Waiting for speech…",
+    "original": "Original",
+    "translated": "Translated"
+  },
+  "startup": {
+    "loading": "Loading…",
+    "loading_settings": "Loading settings…",
+    "loading_session": "Loading session…",
+    "preparing_app": "Preparing app…"
+  },
+  "shutdown": {
+    "title": "Shutting down…",
+    "closing_app": "Closing application…",
+    "finishing_session": "Finishing current session…"
+  },
+  "toast": {
+    "session_error": "Session error",
+    "session_warning": "Session warning",
+    "session_recovered": "Recovered interrupted session."
+  }
+}

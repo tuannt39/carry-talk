@@ -1,0 +1,200 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+env:
+  TAG_NAME: ${{ github.ref_name }}
+  MACOS_MIN_VERSION: '13.0'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  create_release:
+    name: Create draft release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v5
+
+      - name: Create draft GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          notes_file=".github/release-notes/${TAG_NAME}.md"
+
+          if gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            echo "Release $TAG_NAME already exists."
+          elif [ -f "$notes_file" ]; then
+            gh release create "$TAG_NAME" \
+              --draft \
+              --title "$TAG_NAME" \
+              --notes-file "$notes_file" \
+              --generate-notes
+          else
+            gh release create "$TAG_NAME" \
+              --draft \
+              --title "$TAG_NAME" \
+              --generate-notes
+          fi
+
+  build_and_upload:
+    name: Build and upload (${{ matrix.platform }}-${{ matrix.arch }})
+    needs: create_release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            platform: linux
+            arch: amd64
+            target: x86_64-unknown-linux-gnu
+            artifact_name: linux-amd64
+          - os: ubuntu-24.04-arm
+            platform: linux
+            arch: arm64
+            target: aarch64-unknown-linux-gnu
+            artifact_name: linux-arm64
+          - os: windows-latest
+            platform: windows
+            arch: amd64
+            target: x86_64-pc-windows-msvc
+            artifact_name: windows-amd64
+          - os: windows-11-arm
+            platform: windows
+            arch: arm64
+            target: aarch64-pc-windows-msvc
+            artifact_name: windows-arm64
+          - os: macos-15-intel
+            platform: macos
+            arch: intel
+            target: x86_64-apple-darwin
+            artifact_name: macos-intel
+          - os: macos-15
+            platform: macos
+            arch: silicon
+            target: aarch64-apple-darwin
+            artifact_name: macos-silicon
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js LTS
+        uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Set up Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            pkg-config \
+            curl \
+            wget \
+            file \
+            libgtk-3-dev \
+            libwebkit2gtk-4.1-dev \
+            libxdo-dev \
+            libssl-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libasound2-dev \
+            libpulse-dev \
+            patchelf \
+            fakeroot \
+            rpm
+
+      - name: Build Tauri app (macOS)
+        if: matrix.platform == 'macos'
+        env:
+          MACOSX_DEPLOYMENT_TARGET: ${{ env.MACOS_MIN_VERSION }}
+        run: npm run tauri -- build --target ${{ matrix.target }}
+
+      - name: Build Tauri app (Linux)
+        if: matrix.platform == 'linux'
+        run: npm run tauri -- build --target ${{ matrix.target }}
+
+      - name: Build Tauri app (Windows portable)
+        if: matrix.platform == 'windows'
+        run: npm run tauri -- build --target ${{ matrix.target }} --no-bundle
+
+      - name: Upload assets to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          shopt -s nullglob
+          VERSION="${TAG_NAME#v}"
+          asset_dir="$(mktemp -d)"
+          files=()
+
+          copy_asset() {
+            local pattern="$1"
+            local output_name="$2"
+            local matches=($pattern)
+
+            if [ "${#matches[@]}" -ne 1 ]; then
+              echo "Expected exactly one match for pattern '$pattern', found ${#matches[@]}."
+              exit 1
+            fi
+
+            cp "${matches[0]}" "$asset_dir/$output_name"
+            files+=("$asset_dir/$output_name")
+          }
+
+          case "${{ matrix.platform }}" in
+            linux)
+              copy_asset "src-tauri/target/${{ matrix.target }}/release/bundle/appimage/*.AppImage" "carry-talk-${VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.AppImage"
+              copy_asset "src-tauri/target/${{ matrix.target }}/release/bundle/deb/*.deb" "carry-talk-${VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.deb"
+              copy_asset "src-tauri/target/${{ matrix.target }}/release/bundle/rpm/*.rpm" "carry-talk-${VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.rpm"
+              ;;
+            windows)
+              copy_asset "src-tauri/target/${{ matrix.target }}/release/carry-talk.exe" "carry-talk-${VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.exe"
+              ;;
+            macos)
+              copy_asset "src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg" "carry-talk-${VERSION}-${{ matrix.platform }}-${{ matrix.arch }}.dmg"
+              ;;
+            *)
+              echo "Unsupported platform: ${{ matrix.platform }}"
+              exit 1
+              ;;
+          esac
+
+          gh release upload "$TAG_NAME" "${files[@]}" --clobber
+
+  publish_release:
+    name: Publish release
+    needs: build_and_upload
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: gh release edit "$TAG_NAME" --draft=false
